@@ -17,15 +17,26 @@ class Random{
     }
     public:
     Random();
-    double* getListProbability(double arr[],int numAp){
-        //double arr[numAp]={0};
-        double pi = 0;
-        for(int i=0;i<numAp-1;i++){
-            arr[i]=generateRandomNumber();
-            pi+=arr[i];
+    int chooseAPRandom(double arr[],int numAp){
+        int index = -1;
+        double rm = generateRandomNumber();
+        cout << "rm=" <<rm<<endl;
+        if(rm<arr[0])
+        {
+            index = 0;
         }
-        arr[numAp-1]=(1-pi);
-        return arr;
+        else{
+            for(int i=1;i<numAp;i++)
+            {
+                if(rm>=arr[i-1] && rm<=arr[i])
+                {
+                    index = i;
+                }
+           
+            }
+        }
+        
+        return index;
     }
 };
 Random::Random(){
@@ -38,10 +49,21 @@ int main(int argc, char *argv[]) {
     cout << "hello new project" << endl;
     Random rm;
 
+    double popsum  = 1;
+
     double arr[num_ap];
-    rm.getListProbability(arr,num_ap);
-    for(int i=0;i<num_ap;i++){
+    //rm.getListProbability(arr,num_ap);
+   
+    arr[0]= double(popsum/num_ap);
+    cout << "arr[0]="<<arr[0]<<endl;
+    for(int i=1;i<num_ap;i++){
+        arr[i]=arr[i-1]+ double(popsum/num_ap);
         cout << "arr["<<i<<"]="<<arr[i]<<endl;
+    }
+    for(int i=0;i<10;i++)
+    {
+        int index  = rm.chooseAPRandom(arr,num_ap);
+        cout << "index = " << index << endl;
     }
 
     return 0;
