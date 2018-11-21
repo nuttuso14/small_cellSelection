@@ -46,6 +46,8 @@ Random::Random(){
 
 int main(int argc, char *argv[]) {
     int num_ap = 5;
+    double file_size = 200; // Mbyte
+    double bandwidth[num_ap] = {5,10,50,100,500};
     cout << "hello new project" << endl;
     Random rm;
 
