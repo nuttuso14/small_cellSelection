@@ -101,68 +101,84 @@ int FindMinIndex(double list[],int size){
 
 int main(int argc, char *argv[]) {
     int num_ap = 5;
-    int N_Simulation = 1000;
+    int N_Simulation = 100;
     double file_size = 5; // Mbyte
     double bandwidth[num_ap] = {10,50,150,300,500};
     double count1[num_ap] = {0};
     double count2[num_ap] = {0};
     double ti1[num_ap]={0};
     double ti2[num_ap]={0};
-    cout << "hello new project" << endl;
-    cout << "file_size = " << file_size <<endl;
+    //cout << "hello new project" << endl;
+    cout << "file_size = " << file_size << "Mbyte" <<endl;
+    cout << "Bandwidth : " ;
+    for(int i=0;i<num_ap;i++)
+    {
+        cout << "B["<<i<<"]=" <<bandwidth[i] << "MB/s ";
+    }
+    cout << endl;
     Random rm;
 
     double popsum  = 1;
 
-    double arr[num_ap];
-    double lamda[num_ap];
-    double ni[num_ap];
+    double arr[num_ap]={0};
+    double lamda[num_ap]={0};
+    double ni[num_ap]={0};
+    double Eni[num_ap]={0};
     // generate poisson random number...
+    
     for(int n=0;n<N_Simulation;n++)
     {
+        cout << "# of people used : ";
         for(int i=0;i<num_ap;i++)
         {
             lamda[i] = (double)(bandwidth[i]/file_size);
             ni[i] = rm.poissonRandomNumber(lamda[i]);
-           // cout <<"AP"<<i<<"="<<ni[i]<< endl;
+            Eni[i]+=ni[i];
+            cout <<" AP"<<i<<"="<<ni[i];
         }
-
+        cout << endl;
         //rm.getListProbability(arr,num_ap);
 
         // without wifi selection
-       // cout << "************** Without WIFI Selection **************" <<endl; 
+        cout << "************** Without WIFI Selection **************" <<endl; 
         arr[0]= double(popsum/num_ap);
-        //cout << "arr[0]="<<arr[0]<<endl;
+       // cout << "arr[0]="<<arr[0]<<endl;
         for(int i=1;i<num_ap;i++)
         {
             arr[i]=arr[i-1]+ double(popsum/num_ap);
-        // cout << "arr["<<i<<"]="<<arr[i]<<endl;
+         //cout << "arr["<<i<<"]="<<arr[i]<<endl;
         }
 
         int index  = rm.chooseAPRandom(arr,num_ap);
-       // cout << "Select WIFI AP = " << index << endl;
+        cout << "Select WIFI AP = " << index << endl;
         count1[index]+=1;
         //generate ti
         //cout << lamda[index] <<endl;
         double ti = rm.erlangRandomnumber(lamda[index],ni[index]+1);
-       // cout << "download time ti = " << ti << endl;
+        cout << "download time ti = " << ti << endl;
         ti1[index]+=ti;
-       // cout << "************** With WIFI Selection **************" <<endl; 
+        cout << "************** With WIFI Selection **************" <<endl; 
         //calculate min E[Ti]
         double eti[num_ap]={0};
         for(int i=0;i<num_ap;i++)
         {
             eti[i]=(ni[i]+1)/lamda[i];
-           // cout << "eti["<< i << "]="<<eti[i] << endl;
+            cout << "eti["<< i << "]="<<eti[i] << endl;
         }
         int selectwifi = FindMinIndex(eti,num_ap);
-       // cout << "Select WIFI AP = " << selectwifi << endl;
+        cout << "Select WIFI AP = " << selectwifi << endl;
         count2[selectwifi]+=1;
         double sti = rm.erlangRandomnumber(lamda[selectwifi],ni[selectwifi]+1);
-       // cout << "download time ti = " << sti << endl;
+        cout << "download time ti = " << sti << endl;
         ti2[selectwifi]+=sti;
     }
     cout << "***********Simulation result****************"<<endl;
+    cout << "Simulation rounds =" << N_Simulation <<endl;
+    cout << "----- Average # of user E[ni] -----" <<endl;
+    for(int i=0;i<num_ap;i++){
+        double Ani = (double)(Eni[i]/N_Simulation);
+        cout << "E[n"<<i<<"]="<<Ani<<endl;
+    }
     cout << "==== without selection ====" <<endl;
     for(int i=0;i<num_ap;i++)
     {
