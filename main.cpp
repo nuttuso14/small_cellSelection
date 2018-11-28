@@ -159,12 +159,14 @@ int main(int argc, char *argv[]) {
         ti1[index]+=ti;
         cout << "************** With WIFI Selection **************" <<endl; 
         //calculate min E[Ti]
+        cout << "Expected download time =";
         double eti[num_ap]={0};
         for(int i=0;i<num_ap;i++)
         {
             eti[i]=(ni[i]+1)/lamda[i];
-            cout << "eti["<< i << "]="<<eti[i] << endl;
+            cout << " eti["<< i << "]="<<eti[i];
         }
+        cout << endl;
         int selectwifi = FindMinIndex(eti,num_ap);
         cout << "Select WIFI AP = " << selectwifi << endl;
         count2[selectwifi]+=1;
@@ -177,13 +179,17 @@ int main(int argc, char *argv[]) {
     cout << "----- Average # of user E[ni] -----" <<endl;
     for(int i=0;i<num_ap;i++){
         double Ani = (double)(Eni[i]/N_Simulation);
-        cout << "E[n"<<i<<"]="<<Ani<<endl;
+        cout << "E[n"<<i<<"]="<<Ani << " ";
     }
+    cout <<endl;
     cout << "==== without selection ====" <<endl;
+    cout << "# of people for ";
     for(int i=0;i<num_ap;i++)
     {
-        cout <<"Select AP["<<i<<"]="<<count1[i]<<endl;
+        cout <<"AP["<<i<<"]="<<count1[i]<<" ";
     }
+    cout <<endl;
+    cout << "Propability : " << endl;
     for(int i=0;i<num_ap;i++)
     {
         double p = (double)(count1[i]/N_Simulation);
@@ -191,15 +197,18 @@ int main(int argc, char *argv[]) {
         cout <<"P[AP"<<i<<"]="<<p<< " E[t"<<i<<"]="<<eti<<endl;
     }
     cout << "==== with selection ====" <<endl;
-        for(int i=0;i<num_ap;i++)
+    cout << "# of people for ";
+    for(int i=0;i<num_ap;i++)
     {
-        cout <<"Select AP["<<i<<"]="<<count2[i]<<endl;
+        cout <<"Select AP["<<i<<"]="<<count2[i]<<" ";
     }
+    cout <<endl;
     for(int i=0;i<num_ap;i++)
     {
         double p = (double)(count2[i]/N_Simulation);
         double eti = (double)(ti2[i]/N_Simulation);
         cout <<"P[AP"<<i<<"]="<<p<< " E[t"<<i<<"]="<<eti<<endl;
     }
+
     return 0;
 }
